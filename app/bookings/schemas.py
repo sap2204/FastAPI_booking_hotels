@@ -1,23 +1,15 @@
+# Здесь находятся схемы для валидации выходных данных
+
 from datetime import date
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 
-class SBookings(BaseModel):
+class SBooking(BaseModel):
     id: int 
     room_id: int 
     user_id: int 
     date_from: date 
-    date_to: date  
+    date_to: date
     price: int 
     total_cost: int 
-    total_days: int 
-
-    #class Config:
-        # orm_mode поменял название во 2 версии Pydantic
-        #from_attributes = True
-
-    
-
-
-    
-       
+    total_days: int

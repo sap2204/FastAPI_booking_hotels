@@ -1,19 +1,21 @@
-"""Initial migration
+"""Add table Hotels
 
-Revision ID: d78d797e614e
+Revision ID: 04b5f27218d2
 Revises: 
-Create Date: 2023-07-22 15:22:18.297379
+Create Date: 2023-08-22 12:58:44.930553
 
 """
+from typing import Sequence, Union
+
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd78d797e614e'
-down_revision = None
-branch_labels = None
-depends_on = None
+revision: str = '04b5f27218d2'
+down_revision: Union[str, None] = None
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
@@ -23,7 +25,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('location', sa.String(), nullable=False),
     sa.Column('services', sa.JSON(), nullable=True),
-    sa.Column('room_quantity', sa.Integer(), nullable=False),
+    sa.Column('rooms_quantity', sa.Integer(), nullable=False),
     sa.Column('image_id', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
