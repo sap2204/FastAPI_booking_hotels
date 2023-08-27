@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     # указание файла с закрытыми данными для подключения к ДБ
     model_config = SettingsConfigDict(env_file=".env")
 
+    SECRET_KEY: str 
+    ALGORITHM: str
 
-settiings = Settings()
+
+settings = Settings()
 

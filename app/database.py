@@ -3,9 +3,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-from app.config import settiings
+from app.config import settings
 
-DATABASE_URL = settiings.get_database_url
+DATABASE_URL = settings.get_database_url
 
 engine = create_async_engine(DATABASE_URL)
 
