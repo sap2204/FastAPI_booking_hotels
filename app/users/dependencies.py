@@ -17,7 +17,7 @@ def get_token(request:Request):
 
 # Парсинг токена и получение  юзера из БД
 async def get_current_user(token: str = Depends(get_token)):
-    # Проверяем, что в куках jwt-токен, а не что-то другое
+    # Проверяем, что в куках jwt-токен, а не что-то другое (payload - это данные токена)
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, settings.ALGORITHM

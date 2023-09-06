@@ -1,4 +1,4 @@
-# Работа с БД
+# Работа с БД для бронирований
 
 from datetime import date
 from sqlalchemy import and_, func, insert, or_, select
@@ -14,24 +14,10 @@ class BookingDAO(BaseDAO):
     # Метод добавления бронирования
     @classmethod
     async def add(cls, user_id: int, room_id: int, date_from: date, date_to: date,):
-            
-        """
-        WITH booked_rooms AS(
-            SELECT * FROM bookings
-            WHERE room_id = 1 AND
-            (date_from >= '2023-05-15' AND date_from <= '2023-06-20') OR
-            (date_from <= '2023-05-15' AND date_to > '2023-05-15')
-        )
-        SELECT rooms.quantity - COUNT(booked_rooms.room_id) FROM rooms
-        LEFT JOIN booked_rooms ON booked_rooms.id = rooms.id
-        WHERE rooms.id = 1
-        GROUP BY rooms.quantity, booked_rooms.room_id
-        """
-        
+                 
         
         """
-        2-й вариант
-
+        
         WITH booked_rooms AS(
             SELECT * FROM bookings
             WHERE room_id = 1 AND
@@ -49,7 +35,7 @@ class BookingDAO(BaseDAO):
                         Bookings.date_from <= date_to
                         )
                     )
-                ).cte("booked_rooms") # это первая часть запроса
+                ).cte("booked_rooms") # это первая часть запроса (ранее забронированные комнаты)
                 
             get_rooms_left = select(
                     (Rooms.quantity - func.count(booked_rooms.c.room_id)).label("rooms_left")

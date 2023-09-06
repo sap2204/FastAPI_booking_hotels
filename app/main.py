@@ -5,11 +5,13 @@ from pydantic import BaseModel
 
 from app.bookings.router import router as router_bookings
 from app.users.router import router as router_users
+from app.hotels.router import router as router_hotels
 
 app = FastAPI()
 
 app.include_router(router_users)
 app.include_router(router_bookings)
+app.include_router(router_hotels)
 
 class SHotel(BaseModel):
     address: str
@@ -18,7 +20,7 @@ class SHotel(BaseModel):
     has_spa: bool
 
 list[SHotel]
-
+"""
 @app.get("/hotels")
 def get_hotels(
     location: str,
@@ -43,6 +45,9 @@ def get_hotels(
         }
     ]
     return hotels
+"""
+
+
 
 
 

@@ -3,7 +3,7 @@
 from fastapi import HTTPException, status
 
 
-# Класс ошибок (исключаний) бронирований
+# Класс ошибок (исключений) бронирований
 class BookingException(HTTPException):
     status_code = 500
     detail = ""
@@ -45,3 +45,7 @@ class RoomCannotBeBooked(BookingException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Не осталось свободных номеров"
 
+
+class HotelNotFound(BookingException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Отель не найден"
