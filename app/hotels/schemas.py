@@ -10,3 +10,8 @@ class SHotels(BaseModel):
     services: list
     rooms_quantity: int
     image_id: int
+
+
+# Схема отелей со свободными номерами
+class SHotelsRoomsLeft(SHotels):
+    rooms_left: int
