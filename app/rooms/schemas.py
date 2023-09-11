@@ -14,7 +14,7 @@ class SRooms(BaseModel):
     image_id: int
 
 
-class SRoomsLeft(SRooms):
+class SRoomsLeftTotalCost(SRooms):
     total_cost: int
     rooms_left: int
 

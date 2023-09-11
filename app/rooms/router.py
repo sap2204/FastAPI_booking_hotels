@@ -1,7 +1,8 @@
 from datetime import date
 from fastapi import APIRouter
 from app.rooms.dao import RoomsDAO
-
+from app.rooms.schemas import SRoomsLeftTotalCost
+from app.exceptions import DateFromCannotBeAfterDateTo
 
 router = APIRouter(
     prefix="/rooms",
@@ -11,5 +12,8 @@ router = APIRouter(
 
 # Эндпоинт получения списка номеров по hotel_id и датам бронирования
 @router.get("/{hotel_id}")
-async def get_list_rooms(hotel_id: int, date_from: date, date_to: date):
-    return await RoomsDAO.get_list_rooms_free(hotel_id, date_from, date_to)
+async def get_rooms_from_hotel(hotel_id: int, date_from: date, date_to: date) -> list[SRoomsLeftTotalCost]:
+    rooms_with_free_rooms = await RoomsDAO.get_rooms_from_hotel(hotel_id, date_from, date_to)
+    if date_from > date_to:
+        raise DateFromCannotBeAfterDateTo
+    return rooms_with_free_rooms
