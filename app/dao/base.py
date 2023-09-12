@@ -1,6 +1,6 @@
 # Базовый класс для работы с БД (юзеры, отели и т.д.)
 
-from sqlalchemy import insert, select
+from sqlalchemy import delete, insert, select
 from app.database import async_session_maker
 from app.bookings.models import Bookings
 
@@ -42,3 +42,13 @@ class BaseDAO:
             query = insert(cls.model).values(**data)
             await session.execute(query)
             await session.commit()
+
+    
+    # Удаление строки из БД
+    @classmethod
+    async def delete(cls, **filter):
+        async with async_session_maker() as session:
+            query = delete(cls.model).filter_by(**filter)
+            await session.execute(query)
+            await session.commit()
+        

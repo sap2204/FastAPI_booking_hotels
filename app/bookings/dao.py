@@ -1,11 +1,14 @@
 # Работа с БД для бронирований
 
 from datetime import date
-from sqlalchemy import and_, func, insert, or_, select
+from fastapi import Depends
+from sqlalchemy import and_, delete, func, insert, or_, select
 from app.bookings.models import Bookings
 from app.dao.base import BaseDAO
 from app.database import async_session_maker
 from app.rooms.models import Rooms
+from app.users.dependencies import get_current_user
+from app.users.models import Users
 
 
 class BookingDAO(BaseDAO):
@@ -73,6 +76,33 @@ class BookingDAO(BaseDAO):
 
             else:
                 return None
-
-
+            
     
+    # Получение бронирований конкретного юзера с описанием номера
+    @classmethod
+    async def get_bookings_with_rooms_description(cls, user_id):
+        """
+        SELECT bookings.*, rooms.image_id, rooms.name, 
+        rooms.description, rooms.services 
+        FROM bookings
+        LEFT JOIN rooms ON bookings.room_id = rooms.id
+        WHERE bookings.user_id = 2
+        """
+
+                
+        list_bookings = (
+            select(Bookings.__table__.columns,
+                   Rooms.image_id, Rooms.name, Rooms.description, Rooms.services)
+                   .select_from(Bookings)
+                   .join(Rooms, Bookings.room_id == Rooms.id, isouter=True)
+                   .where(Bookings.user_id == user_id)
+        )
+
+        async with async_session_maker() as session:
+            list_bookings = await session.execute(list_bookings)
+            return list_bookings.mappings().all()
+        
+    
+    
+                            
+
