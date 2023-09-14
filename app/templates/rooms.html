@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Номера отеля</title>
+</head>
+<body>
+    <div>
+        {% for room in rooms %}
+            <div style="display: flex; margin-bottom: 30px; margin-left: 100px; margin-top: 50px;">
+                <img src="{{ url_for ('static', path ='images/' + room.image_id|string + '.webp') }}"
+                alt=" Фото номера" width="250">
+                    <div style="margin-left: 10px;">
+                        <h2>{{room.name}}</h2>
+                        <h4 style="color: darkblue;">{{room.services}}</h4>
+                        <h4>Цена за 1 сутки: {{room.price}} руб.</h4>
+                        <h4>Осталось {{room.rooms_left}} свободных номеров из {{room.quantity}} </h4>
+                    </div>      
+            </div>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>
