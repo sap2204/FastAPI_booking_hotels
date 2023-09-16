@@ -1,9 +1,11 @@
+import asyncio
 from datetime import date
 from fastapi import APIRouter
 from app.exceptions import CannotBookHotelForLongPeriod, DateFromCannotBeAfterDateTo, HotelNotFound
 from app.hotels.schemas import SHotelsRoomsLeft
 from app.hotels.dao import HotelsDAO
 from app.hotels.schemas import SHotels
+from fastapi_cache.decorator import cache
 
 
 router = APIRouter(
@@ -14,6 +16,7 @@ router = APIRouter(
 
 # Эндпоинт получения списка отелей
 @router.get("/{location}")
+@cache(expire=30)
 async def get_hotels_location_dates(location: str, date_from: date, date_to: date) -> list[SHotelsRoomsLeft]:  
     if date_from > date_to:
         raise DateFromCannotBeAfterDateTo

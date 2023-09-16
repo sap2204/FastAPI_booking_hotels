@@ -1,13 +1,15 @@
 from datetime import date
 from fastapi import APIRouter, Depends, Request
+from pydantic import TypeAdapter, parse_obj_as
 from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.bookings.models import Bookings
-from app.bookings.schemas import SBooking, SBookingsWithRoomsDescription
+from app.bookings.schemas import SBooking, SBookingsWithRoomsDescription, SNewBooking
 
 
 from app.database import async_session_maker
 from app.exceptions import RoomCannotBeBooked
+from app.tasks.tasks import send_booking_confirmation_email
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -39,6 +41,9 @@ async def add_booking(
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCannotBeBooked
+    booking = TypeAdapter(SBooking).validate_python(booking).model_dump()
+    send_booking_confirmation_email(booking, user.email)
+    return booking
     
 
 # Эндпоинт удаления брони зарегистрированным юзером
