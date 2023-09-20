@@ -25,10 +25,13 @@ from sqladmin import Admin, ModelView
 from app.database import engine
 from app.users.models import Users
 
+from app.admin.auth import authentication_backend
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"), "static")
 
+# Подключение роутеров с эндпоинтами
 app.include_router(router_users)
 app.include_router(router_bookings)
 app.include_router(router_hotels)
@@ -46,7 +49,7 @@ def startup():
 
 
 # Подключение админки SQLAdmin
-admin = Admin(app, engine)
+admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)

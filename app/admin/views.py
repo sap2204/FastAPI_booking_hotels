@@ -1,3 +1,4 @@
+# Создание моделей в админке
 
 from sqladmin import ModelView
 from app.bookings.models import Bookings
