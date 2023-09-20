@@ -17,7 +17,9 @@ class Bookings(Base):
     total_days = Column(Integer, Computed("date_to - date_from"))
 
     user = relationship("Users", back_populates="booking")
+    room = relationship("Rooms", back_populates="booking")
+    
 
-
+    # Магический метод для понятного отображения инф-ии о брони для пользователя
     def __str__(self):
-        return f"Booking #{self.id}"
+        return f"Бронь №: {self.id} - {self.price} руб."

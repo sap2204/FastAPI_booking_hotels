@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from fastapi.staticfiles import StaticFiles
-from app.admin.views import BookingsAdmin, UsersAdmin
+from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
 
 from app.bookings.router import router as router_bookings
 from app.config import settings
@@ -47,6 +47,9 @@ def startup():
 
 # Подключение админки SQLAdmin
 admin = Admin(app, engine)
+
 admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
+admin.add_view(RoomsAdmin)
+admin.add_view(HotelsAdmin)
 

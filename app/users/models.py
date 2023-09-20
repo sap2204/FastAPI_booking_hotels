@@ -12,7 +12,11 @@ class Users(Base):
     hashed_password = Column(String, nullable=False)
 
     booking = relationship("Bookings", back_populates="user")
+    
 
+    # Магический метод для понятного отображения информации пользователю 
     def __str__(self):
-        return f"User {self.email}"
+        return f"Клиент: {self.email}"
+
+    
 
