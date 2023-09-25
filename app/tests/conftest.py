@@ -13,6 +13,10 @@ from app.hotels.models import Hotels
 from app.rooms.models import Rooms
 from app.users.models import Users
 
+from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from app.main import app as fastapi_app
+
 
 # Создание фикстуры для создания таблиц в тестовой БД и наполнение их данными
 @pytest.fixture(scope="session", autouse=True)
@@ -64,3 +68,18 @@ def event_loop(request):
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+# Асинхронный клиент для тестирования эндпоинтов
+@pytest.fixture(scope="function")
+async def ac():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
+        yield ac
+
+
+# Фикстура для сессии
+@pytest.fixture(scope="function")
+async def session():
+    async with async_session_maker() as session:
+        yield session
+
