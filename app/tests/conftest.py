@@ -19,7 +19,7 @@ from app.main import app as fastapi_app
 
 
 # Создание фикстуры для создания таблиц в тестовой БД и наполнение их данными
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 async def prepare_database():
     assert settings.MODE == "TEST"
 

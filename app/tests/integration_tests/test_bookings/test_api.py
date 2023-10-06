@@ -1,6 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
+from app.tests.conftest import authenticated_ac
+
 
 # Интеграционный тест по добавлению и получению брони в эндпоинте
 @pytest.mark.parametrize("room_id, date_from, date_to, booked_rooms, status_code", [
@@ -29,3 +31,26 @@ async def test_add_and_get_booking(room_id, date_from, date_to, status_code,
     response = await authenticated_ac.get("/bookings")
     
     assert len(response.json()) == booked_rooms
+
+
+
+# Тест на получение и удаление броней аутентифицированного юзера
+async def test_get_and_delete_bookings(authenticated_ac: AsyncClient):
+    # Получение бронирований аутентифицированного юзера
+    response = await authenticated_ac.get("/bookings")
+
+    # Составление списка из id броней. Получение номера брони по ключу "id"    
+    users_bookings = [booking["id"] for booking in response.json()]
+
+    # Удаление брони аутентифицированного юзера по id
+    for booking_id in users_bookings:
+        response = await authenticated_ac.delete(
+            f"/bookings/{booking_id}"
+        )
+    
+    # Получение броней аутентифицированного юзера после удалений броней
+    response = await authenticated_ac.get("/bookings")
+    assert len(response.json()) == 0
+
+    
+    

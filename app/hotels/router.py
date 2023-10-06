@@ -16,7 +16,7 @@ router = APIRouter(
 
 # Эндпоинт получения списка отелей
 @router.get("/{location}")
-@cache(expire=30)
+#@cache(expire=30)
 async def get_hotels_location_dates(location: str, date_from: date, date_to: date) -> list[SHotelsRoomsLeft]:  
     if date_from > date_to:
         raise DateFromCannotBeAfterDateTo
