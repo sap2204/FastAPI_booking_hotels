@@ -1,5 +1,5 @@
-from datetime import date
-from fastapi import FastAPI
+from datetime import date, time
+from fastapi import FastAPI, Request
 from typing import Optional 
 from pydantic import BaseModel
 
@@ -27,9 +27,23 @@ from app.users.models import Users
 
 from app.admin.auth import authentication_backend
 
+from app.logger import logger
+import time
+import sentry_sdk
+
 app = FastAPI()
 
+# Подключение Sentry для отлова ошибок
+sentry_sdk.init(
+    dsn="https://b8da497be2c5c2b30b7ed709cfdaefed@o4506042285490176.ingest.sentry.io/4506042601242624",
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
+
+
+# Картинки для шаблонов страниц эндпоинтов
 app.mount("/static", StaticFiles(directory="app/static"), "static")
+
 
 # Подключение роутеров с эндпоинтами
 app.include_router(router_users)
@@ -55,4 +69,16 @@ admin.add_view(UsersAdmin)
 admin.add_view(BookingsAdmin)
 admin.add_view(RoomsAdmin)
 admin.add_view(HotelsAdmin)
+
+
+# Добавление Middleware для логирования
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    responce = await call_next(request)
+    process_time = time.time() - start_time
+    logger.info("Request handling time", extra={
+        "process_time": round(process_time, 4)
+    })
+    return responce
 
