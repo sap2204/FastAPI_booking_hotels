@@ -31,6 +31,8 @@ from app.logger import logger
 import time
 import sentry_sdk
 
+from fastapi_versioning import VersionedFastAPI
+
 app = FastAPI()
 
 # Подключение Sentry для отлова ошибок
@@ -39,10 +41,6 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     profiles_sample_rate=1.0,
 )
-
-
-# Картинки для шаблонов страниц эндпоинтов
-app.mount("/static", StaticFiles(directory="app/static"), "static")
 
 
 # Подключение роутеров с эндпоинтами
@@ -60,6 +58,16 @@ app.include_router(router_images)
 def startup():
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
+
+# Версионирование API
+app = VersionedFastAPI(app,
+    version_format='{major}',
+    prefix_format='/v{major}',
+    #description='Greet users with a nice message',
+    #middleware=[
+        #Middleware(SessionMiddleware, secret_key='mysecretkey')
+    #]
+)
 
 
 # Подключение админки SQLAdmin
@@ -82,3 +90,6 @@ async def add_process_time_header(request: Request, call_next):
     })
     return responce
 
+
+# Картинки для шаблонов страниц эндпоинтов
+app.mount("/static", StaticFiles(directory="app/static"), "static")

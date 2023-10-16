@@ -5,6 +5,7 @@ from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.bookings.models import Bookings
 from app.bookings.schemas import SBooking, SBookingsWithRoomsDescription, SNewBooking
+from fastapi_versioning import  version
 
 
 from app.database import async_session_maker
@@ -22,6 +23,7 @@ router = APIRouter(
 
 # Эндпоинт получения бронирований конкретного юзера
 @router.get("")
+@version(1)
 async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBooking]:
     return await BookingDAO.find_all(user_id=user.id)
 
@@ -34,6 +36,7 @@ async def get_bookings_user_with_rooms_desc(user: Users = Depends(get_current_us
 
 # Эндпоинт добавления бронирований
 @router.post("")
+@version(2)
 async def add_booking(
     room_id: int, date_from: date, date_to: date,
     user: Users = Depends(get_current_user),
