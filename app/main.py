@@ -12,6 +12,8 @@ from app.users.router import router as router_users
 from app.hotels.router import router as router_hotels
 from app.rooms.router import router as router_rooms
 
+from app.importer.router import router as router_import
+
 from app.pages.router import router as router_pages
 from app.images.router import router as router_images
 
@@ -44,10 +46,12 @@ sentry_sdk.init(
 
 
 # Подключение роутеров с эндпоинтами
+app.include_router(router_import)
 app.include_router(router_users)
 app.include_router(router_bookings)
 app.include_router(router_hotels)
 app.include_router(router_rooms)
+
 
 app.include_router(router_pages)
 app.include_router(router_images)
