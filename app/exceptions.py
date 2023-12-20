@@ -61,11 +61,15 @@ class CannotBookHotelForLongPeriod(BookingException):
     detail = "Невозможно забронировать номер на такой большой срок"
 
 
-class CannotLoadFileWithThisName(BaseException):
+class CannotLoadFileWithThisName(BookingException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Название файла не совпадает с названиями таблиц в БД"
 
 
-class CannotOnvertCSVIntoBDFormat(BaseException):
+class CannotOnvertCSVIntoBDFormat(BookingException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Невозможно преобразовать csv в формат БД"
+
+class CannotImportDataInDatabase(BookingException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Невозможно вставить данные в базу данных"

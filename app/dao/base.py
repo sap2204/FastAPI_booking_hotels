@@ -3,6 +3,9 @@
 from sqlalchemy import delete, insert, select
 from app.database import async_session_maker
 from app.bookings.models import Bookings
+from app.exceptions import CannotImportDataInDatabase
+from app.hotels.models import Hotels
+from app.rooms.models import Rooms
 
 
 class BaseDAO:
@@ -51,4 +54,35 @@ class BaseDAO:
             query = delete(cls.model).filter_by(**filter)
             await session.execute(query)
             await session.commit()
+
+
+# Множественная вставка данных из csv-файла
+async def import_data_in_database(file_name, data):
+    try:
+        if file_name == "bookings":
+            async with async_session_maker() as session:
+                for i in data:
+                    query = insert(Bookings)
+                    result = await session.execute(query, i)
+                await session.commit()
+        
+
+        if file_name == "hotels":
+            async with async_session_maker() as session:
+                for i in data:
+                    query = insert(Hotels)
+                    result = await session.execute(query, i)
+                await session.commit()
+
+        if file_name == "rooms":
+            async with async_session_maker() as session:
+                for i in data:
+                    query = insert(Rooms)
+                    result = await session.execute(query, i)
+                await session.commit()
+
+    except:
+        raise CannotImportDataInDatabase
+
+            
         
