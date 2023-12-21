@@ -26,6 +26,7 @@ router = APIRouter(
 )
 
 
+# Эндпоинт добавления данных из csv-файла в БД
 @router.post("/{table_name}", 
              status_code=201,
              dependencies=[Depends(get_current_user)]

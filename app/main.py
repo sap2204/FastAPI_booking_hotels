@@ -35,6 +35,8 @@ import sentry_sdk
 
 from fastapi_versioning import VersionedFastAPI
 
+from prometheus_fastapi_instrumentator import Instrumentator
+
 app = FastAPI()
 
 # Подключение Sentry для отлова ошибок
@@ -72,6 +74,15 @@ app = VersionedFastAPI(app,
         #Middleware(SessionMiddleware, secret_key='mysecretkey')
     #]
 )
+
+
+# Подключение сбора метрики
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"]
+)
+
+instrumentator.instrument(app).expose(app)
 
 
 # Подключение админки SQLAdmin
