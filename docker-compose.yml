@@ -1,6 +1,19 @@
 version: '3.7'
 
 services:
+  nginx:
+    build: 
+      context: .
+      dockerfile: "Dockerfile.nginx"
+    container_name: booking_nginx
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - booking
+      - prometheus
+      - grafana
+
   db:
     image: postgres:15
     container_name: booking_db
@@ -16,7 +29,8 @@ services:
     container_name: booking_redis
 
   booking:
-    build: .
+    build:
+      context: .
     container_name: booking_app
     env_file:
       - .env-non-dev
@@ -24,11 +38,12 @@ services:
       - db
       - redis
     command: ["/booking/docker/app.sh"]
-    ports:
-      - 7777:8000
+    #ports:
+      #- 7777:8000
 
   celery:
-    build: .
+    build:
+      context: .
     container_name: booking_celery
     command: ["/booking/docker/celery.sh", "celery"]
     env_file:
@@ -37,15 +52,16 @@ services:
       - redis
 
   flower:
-    build: .
+    build:
+      context: .
     container_name: booking_flower
     command: ["/booking/docker/celery.sh", "flower"]
     env_file:
       - .env-non-dev
     depends_on:
       - redis
-    ports:
-      - 5555:5555
+    #ports:
+      #- 5555:5555
 
   prometheus:
     image: prom/prometheus:v2.43.0

@@ -13,7 +13,7 @@ router = APIRouter(
 
 # Эндпоинт получения списка номеров по hotel_id и датам бронирования
 @router.get("/{hotel_id}")
-@cache(expire=30)
+#@cache(expire=30)
 async def get_rooms_from_hotel(hotel_id: int, date_from: date, date_to: date) -> list[SRoomsLeftTotalCost]:
     rooms_with_free_rooms = await RoomsDAO.get_rooms_from_hotel(hotel_id, date_from, date_to)
     if date_from > date_to:

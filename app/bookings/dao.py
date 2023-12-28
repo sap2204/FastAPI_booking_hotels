@@ -56,7 +56,7 @@ class BookingDAO(BaseDAO):
                 rooms_left: int = rooms_left.scalar()
 
                 # Проверка возможности бронирования комнаты
-                if None > 0:
+                if rooms_left > 0:
                     
                     # Запрос на получение цены за 1 день проживания
                     get_price = select(Rooms.price).filter_by(id=room_id)
